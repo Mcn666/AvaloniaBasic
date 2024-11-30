@@ -1,0 +1,71 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:AvaloniaApplication3.ViewModels"
+             xmlns:cm="clr-namespace:AvaloniaApplication3.Method"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="AvaloniaApplication3.Views.MediaPlayerView"
+             x:DataType="vm:MediaPlayerViewModel">
+    
+    <UserControl.DataContext>
+        <vm:MediaPlayerViewModel/>
+    </UserControl.DataContext>
+
+    <!--这是自定义的布尔类型转换器-->
+    <UserControl.Resources>
+        <cm:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+    </UserControl.Resources>
+
+    <Grid RowDefinitions="*,auto">
+
+        <ContentControl Content="{Binding VideoView}"/>
+
+        <StackPanel Grid.Row="1">
+
+            <Grid ColumnDefinitions="*,auto">
+                <Slider Grid.Column="0"
+                        Minimum="0"
+                        Maximum="1"
+                        Value="{Binding CurrentPlayPosition}"/>
+
+                <!--音量控制栏-->
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <TextBlock Text="音量：" VerticalAlignment="Center" Margin="20,0,0,0"/>
+                    <Slider Width="100"
+                            Minimum="0"
+                            Maximum="100"
+                            Value="{Binding MediaPlayerVolume}"/>
+                </StackPanel>
+            </Grid>
+
+            <!--媒体播放控制栏-->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="打开"
+                        Background="Transparent"
+                        Command="{Binding OpenMedia}"/>
+
+                <Grid>
+                    <Button Content="播放"
+                            Background="Transparent"
+                            Command="{Binding PlayMedia}"
+                            IsVisible="{Binding IsPlaying, Converter={StaticResource InverseBooleanConverter}}"/>
+                    <Button Content="暂停"
+                            Background="Transparent"
+                            Command="{Binding PauseMedia}"
+                            IsVisible="{Binding IsPlaying}"/>
+                </Grid>
+
+                <Button Content="停止"
+                        Background="Transparent"
+                        Command="{Binding StopMedia}"/>
+            </StackPanel>
+
+        </StackPanel>
+
+        <!--媒体播放时间信息-->
+        <TextBlock Grid.Row="1"
+                   VerticalAlignment="Bottom" HorizontalAlignment="Right"
+                   Text="{Binding MediaPlayerTimeInfo}"/>
+    </Grid>
+</UserControl>
